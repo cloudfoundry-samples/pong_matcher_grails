@@ -1,72 +1,71 @@
 package org.pongmatcher
 
-
-
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
+
+import org.pongmatcher.Result
 
 @Transactional(readOnly = true)
 class MatchRequestController {
 
     static responseFormats = ['json', 'xml']
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond MatchRequest.list(params), [status: OK]
-    }
+    static allowedMethods = [update: "PUT"]
 
     def show(MatchRequest matchRequestInstance) {
+        if (matchRequestInstance == null) {
+            render status: NOT_FOUND
+            return
+        } else {
+            respond matchRequestInstance, [status: OK]
+            return
+        }
+    }
+
+    @Transactional
+    def save() {
+        log.error "Request in: ${request.JSON}"
+        def newMatchRequest = new MatchRequest(requesterId: request.JSON.get("player"))
+        newMatchRequest.id = params.id
+        newMatchRequest.save(failOnError: true)
+
+        def openMatchRequest = firstOpenMatchRequest(newMatchRequest.requesterId)
+        if (openMatchRequest) {
+            def match = new Match(matchRequest1: openMatchRequest,
+                                  matchRequest2: newMatchRequest)
+            match.save(failOnError: true)
+        }
+
         render status: OK
         return
     }
 
-    @Transactional
-    def save(MatchRequest matchRequestInstance) {
-        if (matchRequestInstance == null) {
-            render status: NOT_FOUND
-            return
+    def firstOpenMatchRequest(playerId) {
+        log.error "Unfulfilled requests: ${unfulfilledMatchRequests().size()}"
+        unfulfilledMatchRequests().find { matchRequest ->
+            log.error "Assessing whether request is open: ${matchRequest}"
+            def inappropriateOpponentIds = [playerId] + previousOpponents(playerId)
+            log.error "Inappropriate opponents: ${inappropriateOpponentIds}"
+            log.error "Requester: ${matchRequest.requesterId}"
+            !inappropriateOpponentIds.contains(matchRequest.requesterId)
         }
-
-        matchRequestInstance.validate()
-        if (matchRequestInstance.hasErrors()) {
-            render status: NOT_ACCEPTABLE
-            return
-        }
-
-        matchRequestInstance.save flush:true
-        respond matchRequestInstance, [status: CREATED]
     }
 
-    @Transactional
-    def update(MatchRequest matchRequestInstance) {
-        if (matchRequestInstance == null) {
-            def m = new MatchRequest()
-            m.id = params.id
-            m.save()
-            render status: OK
-            return
+    def unfulfilledMatchRequests() {
+        MatchRequest.list().findAll { matchRequest ->
+            log.error "Assessing whether request is unfulfilled: ${matchRequest}"
+            matchRequest.match() == null
         }
-
-        matchRequestInstance.validate()
-        if (matchRequestInstance.hasErrors()) {
-            render status: NOT_ACCEPTABLE
-            return
-        }
-
-        matchRequestInstance.save flush:true
-        respond matchRequestInstance, [status: OK]
     }
 
-    @Transactional
-    def delete(MatchRequest matchRequestInstance) {
-
-        if (matchRequestInstance == null) {
-            render status: NOT_FOUND
-            return
+    def previousOpponents(playerId) {
+        resultsInvolvingPlayer(playerId).collect { result ->
+            result.winner == playerId ? result.loser : result.winner
         }
+    }
 
-        matchRequestInstance.delete flush:true
-        render status: NO_CONTENT
+    def resultsInvolvingPlayer(playerId) {
+        Result.list().findAll { result ->
+            [result.winnerId, result.loserId].contains(playerId)
+        }
     }
 }

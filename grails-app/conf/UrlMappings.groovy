@@ -5,7 +5,11 @@ class UrlMappings {
             action = [DELETE: "delete"]
         }
 
-        "/"(view:"/index")
-        "500"(view:'/error')
+        "/match_requests/$id"(controller: "matchRequest") {
+            action = [GET: "show", PUT: "save"]
+        }
+
+        "/"(view: "/index")
+        "500"(view: '/error')
 	}
 }
