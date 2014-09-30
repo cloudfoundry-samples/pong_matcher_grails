@@ -1,13 +1,13 @@
 package org.pongmatcher
 
-class MatchRequest {
+import org.pongmatcher.Match
 
+class MatchRequest {
+    static hasOne = [match: Match]
     String id
+    String requesterId
 
     static mapping = {
-      id column: "uuid", generator: "assigned"
-    }
-
-    static constraints = {
+        id column: "uuid", generator: "assigned"
     }
 }

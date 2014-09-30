@@ -1,7 +1,9 @@
 class UrlMappings {
 
 	static mappings = {
-        "/match_requests"(resources: 'matchRequest')
+        "/all"(controller: "everyResource") {
+            action = [DELETE: "delete"]
+        }
 
         "/"(view:"/index")
         "500"(view:'/error')
