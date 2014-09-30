@@ -16,6 +16,11 @@ class MatchRequestController {
         respond MatchRequest.list(params), [status: OK]
     }
 
+    def show(MatchRequest matchRequestInstance) {
+        render status: OK
+        return
+    }
+
     @Transactional
     def save(MatchRequest matchRequestInstance) {
         if (matchRequestInstance == null) {
@@ -36,7 +41,10 @@ class MatchRequestController {
     @Transactional
     def update(MatchRequest matchRequestInstance) {
         if (matchRequestInstance == null) {
-            render status: NOT_FOUND
+            def m = new MatchRequest()
+            m.id = params.id
+            m.save()
+            render status: OK
             return
         }
 
