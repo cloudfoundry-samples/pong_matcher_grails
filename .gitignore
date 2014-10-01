@@ -1,2 +1,2 @@
-*.tld
-target
+app/*.tld
+app/target
