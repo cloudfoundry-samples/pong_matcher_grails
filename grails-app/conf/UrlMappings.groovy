@@ -9,6 +9,10 @@ class UrlMappings {
             action = [GET: "show", PUT: "save"]
         }
 
+        "/results"(controller: "result") {
+            action = [POST: "save"]
+        }
+
         "/"(view: "/index")
         "500"(view: '/error')
 	}

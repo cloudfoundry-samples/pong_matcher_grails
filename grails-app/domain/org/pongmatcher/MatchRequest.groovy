@@ -11,7 +11,7 @@ class MatchRequest {
     }
 
     Match match() {
-        def request = this
+        MatchRequest request = this
         def query = Match.where {
             matchRequest1 == request || matchRequest2 == request
         }

@@ -12,6 +12,7 @@ class EveryResourceController {
     def delete() {
         Match.executeUpdate("delete Match m")
         MatchRequest.executeUpdate("delete MatchRequest r")
+        Result.executeUpdate("delete Result r")
         render status: OK
         return
     }

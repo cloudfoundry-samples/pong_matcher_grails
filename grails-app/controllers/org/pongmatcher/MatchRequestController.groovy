@@ -58,7 +58,7 @@ class MatchRequestController {
 
     def previousOpponents(playerId) {
         resultsInvolvingPlayer(playerId).collect { result ->
-            result.winner == playerId ? result.loser : result.winner
+            result.winnerId == playerId ? result.loserId : result.winnerId
         }
     }
 
