@@ -10,6 +10,18 @@ class MatchRequest {
         id column: "uuid", generator: "assigned"
     }
 
+    static def unfulfilled() {
+        list().findAll { it.match() == null }
+    }
+
+    static MatchRequest firstOpen(playerId) {
+        def inappropriateOpponentIds =
+            [playerId] + Result.previousOpponents(playerId)
+        unfulfilled().find { matchRequest ->
+            !inappropriateOpponentIds.contains(matchRequest.requesterId)
+        }
+    }
+
     Match match() {
         MatchRequest request = this
         def query = Match.where {

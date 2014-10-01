@@ -26,7 +26,7 @@ class MatchRequestController {
         newMatchRequest.id = params.id
         newMatchRequest.save(failOnError: true)
 
-        def openMatchRequest = firstOpenMatchRequest(newMatchRequest.requesterId)
+        def openMatchRequest = MatchRequest.firstOpen(newMatchRequest.requesterId)
         if (openMatchRequest) {
             def match = new Match(matchRequest1: openMatchRequest,
                                   matchRequest2: newMatchRequest)
@@ -37,28 +37,4 @@ class MatchRequestController {
         return
     }
 
-    def firstOpenMatchRequest(playerId) {
-        unfulfilledMatchRequests().find { matchRequest ->
-            def inappropriateOpponentIds = [playerId] + previousOpponents(playerId)
-            !inappropriateOpponentIds.contains(matchRequest.requesterId)
-        }
-    }
-
-    def unfulfilledMatchRequests() {
-        MatchRequest.list().findAll { matchRequest ->
-            matchRequest.match() == null
-        }
-    }
-
-    def previousOpponents(playerId) {
-        resultsInvolvingPlayer(playerId).collect { result ->
-            result.winnerId == playerId ? result.loserId : result.winnerId
-        }
-    }
-
-    def resultsInvolvingPlayer(playerId) {
-        Result.list().findAll { result ->
-            [result.winnerId, result.loserId].contains(playerId)
-        }
-    }
 }
