@@ -22,7 +22,6 @@ class MatchRequestController {
 
     @Transactional
     def save() {
-        log.error "Request in: ${request.JSON}"
         def newMatchRequest = new MatchRequest(requesterId: request.JSON.get("player"))
         newMatchRequest.id = params.id
         newMatchRequest.save(failOnError: true)
@@ -39,19 +38,14 @@ class MatchRequestController {
     }
 
     def firstOpenMatchRequest(playerId) {
-        log.error "Unfulfilled requests: ${unfulfilledMatchRequests().size()}"
         unfulfilledMatchRequests().find { matchRequest ->
-            log.error "Assessing whether request is open: ${matchRequest}"
             def inappropriateOpponentIds = [playerId] + previousOpponents(playerId)
-            log.error "Inappropriate opponents: ${inappropriateOpponentIds}"
-            log.error "Requester: ${matchRequest.requesterId}"
             !inappropriateOpponentIds.contains(matchRequest.requesterId)
         }
     }
 
     def unfulfilledMatchRequests() {
         MatchRequest.list().findAll { matchRequest ->
-            log.error "Assessing whether request is unfulfilled: ${matchRequest}"
             matchRequest.match() == null
         }
     }
