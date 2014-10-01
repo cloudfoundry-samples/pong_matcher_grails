@@ -3,7 +3,7 @@ dataSource {
     jmxExport = true
     driverClassName = "org.postgresql.Driver"
     dialect = org.hibernate.dialect.PostgreSQLDialect
-    uri = new URI(System.env.DATABASE_URL)
+    uri = new URI(System.env.DATABASE_URL ?: "postgres://foo:bar@localhost")
     username = uri.userInfo ? uri.userInfo.split(":")[0] : ""
     password = uri.userInfo ? uri.userInfo.split(":")[1] : ""
     url = "jdbc:postgresql://" + uri.host + uri.path
