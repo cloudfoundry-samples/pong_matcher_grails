@@ -4,12 +4,9 @@ class Result {
     String winnerId
     String loserId
 
-    static constraints = {
-    }
-
     static def involvingPlayer(playerId) {
-        list().findAll { result ->
-            [result.winnerId, result.loserId].contains(playerId)
+        where {
+            [winnerId, loserId].contains(playerId)
         }
     }
 
