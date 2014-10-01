@@ -8,8 +8,7 @@ import org.pongmatcher.Result
 @Transactional(readOnly = true)
 class MatchRequestController {
 
-    static responseFormats = ['json', 'xml']
-    static allowedMethods = [update: "PUT"]
+    static responseFormats = ['json']
 
     def show(MatchRequest matchRequestInstance) {
         if (matchRequestInstance == null) {
