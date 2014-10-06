@@ -15,22 +15,3 @@ hibernate {
     singleSession = true // configure OSIV singleSession mode
     flush.mode = 'manual' // OSIV session flush mode outside of transactional context
 }
-
-// environment specific settings
-environments {
-    development {
-        dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-        }
-    }
-    test {
-        dataSource {
-            dbCreate = "update"
-        }
-    }
-    production {
-        dataSource {
-            dbCreate = "update"
-        }
-    }
-}
