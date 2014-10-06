@@ -1,3 +1,4 @@
 #!/bin/bash
 
 export DATABASE_URL=postgres://localhost:5432/pong_matcher_grails_development
+export VCAP_APPLICATION='{"instance_index":0}'

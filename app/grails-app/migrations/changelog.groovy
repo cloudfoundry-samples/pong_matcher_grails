@@ -1,4 +1,16 @@
+import grails.converters.JSON
+
 databaseChangeLog = {
+
+    preConditions {
+        grailsPrecondition {
+            check {
+                // ensure scripts/development_exports is sourced before running migrations on dev machines
+                def vcapApplication = JSON.parse(System.getenv("VCAP_APPLICATION"))
+                assert vcapApplication.instance_index == 0
+            }
+        }
+    }
 
 	changeSet(author: "pivotal (generated)", id: "1412587548156-1") {
 		createTable(tableName: "match") {
