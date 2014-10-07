@@ -6,6 +6,7 @@ class Match {
     Date proposedDate
 
     static constraints = {
+        proposedDate blank: true, nullable: true
     }
 
     static mapping = {
