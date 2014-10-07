@@ -6,6 +6,9 @@ class Match {
     Date proposedDate
 
     static constraints = {
-        proposedDate blank: true
+    }
+
+    static mapping = {
+        table "`match`"
     }
 }
