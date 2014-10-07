@@ -75,4 +75,6 @@ databaseChangeLog = {
 	changeSet(author: "pivotal (generated)", id: "1412699223280-5") {
 		addForeignKeyConstraint(baseColumnNames: "match_request2_id", baseTableName: "match", constraintName: "FK_lkbnrcv1u8ni17f5qr30b1ogs", deferrable: "false", initiallyDeferred: "false", referencedColumnNames: "uuid", referencedTableName: "match_request", referencesUniqueColumn: "false")
 	}
+
+	include file: 'add-proposed-date-to-match.groovy'
 }
