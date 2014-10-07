@@ -1,15 +1,17 @@
 dataSource {
     pooled = true
     jmxExport = true
-    driverClassName = "org.postgresql.Driver"
-    dialect = org.hibernate.dialect.PostgreSQLDialect
-    uri = new URI(System.env.DATABASE_URL ?: "postgres://foo:bar@localhost")
+    driverClassName = "com.mysql.jdbc.Driver"
+    dialect = org.hibernate.dialect.MySQL5InnoDBDialect
+    uri = new URI(System.env.DATABASE_URL ?: "mysql://foo:bar@localhost")
     username = uri.userInfo ? uri.userInfo.split(":")[0] : ""
     password = uri.userInfo ? uri.userInfo.split(":")[1] : ""
-    url = "jdbc:postgresql://" + uri.host + uri.path
+    url = "jdbc:mysql://" + uri.host + uri.path
 
     properties {
-        maxActive = 2
+        dbProperties {
+            autoReconnect = true
+        }
     }
 }
 hibernate {

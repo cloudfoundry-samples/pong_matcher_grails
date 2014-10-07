@@ -6,4 +6,4 @@ applications:
     path: target/pong_matcher_grails-0.1.war
     buildpack: java_buildpack
     services:
-      - postgres
+      - mysql
