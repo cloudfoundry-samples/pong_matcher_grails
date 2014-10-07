@@ -7,6 +7,10 @@ dataSource {
     username = uri.userInfo ? uri.userInfo.split(":")[0] : ""
     password = uri.userInfo ? uri.userInfo.split(":")[1] : ""
     url = "jdbc:postgresql://" + uri.host + uri.path
+
+    properties {
+        maxActive = 2
+    }
 }
 hibernate {
     cache.use_second_level_cache = true
