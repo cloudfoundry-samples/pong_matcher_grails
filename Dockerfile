@@ -31,4 +31,4 @@ ENV         GROOVY_HOME /groovy
 ENV         PATH $GROOVY_HOME/bin:$PATH
 ENV         JAVA_HOME /usr
 
-RUN         cd pong_matcher_grails; ./grailsw refresh-dependencies
+RUN         cd pong_matcher_grails; ./grailsw war
