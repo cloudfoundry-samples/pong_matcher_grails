@@ -13,7 +13,7 @@ ADD     https://cli.run.pivotal.io/stable?release=debian64&source=github cf.deb
 RUN     dpkg -i cf.deb
 
 # install java and unzip
-RUN     apt-get install -y default-jre
+RUN     apt-get install -y openjdk-7-jdk
 RUN     apt-get install -y unzip
 
 # install groovy
@@ -29,6 +29,6 @@ RUN         chown -R web:web pong_matcher_grails
 USER        web
 ENV         GROOVY_HOME /groovy
 ENV         PATH $GROOVY_HOME/bin:$PATH
-ENV         JAVA_HOME /usr
+ENV         JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
 RUN         cd pong_matcher_grails; ./grailsw war
