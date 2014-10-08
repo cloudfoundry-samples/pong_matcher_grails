@@ -58,7 +58,7 @@ mysql.server
 mysql -u root
 ```
 
-Create a database user in the MySQL REPL you just opened:
+Create a database user and table in the MySQL REPL you just opened:
 
 ```sql
 CREATE USER 'grailspong'@'localhost' IDENTIFIED BY 'grailspong';
