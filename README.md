@@ -54,7 +54,7 @@ Install and start mysql:
 
 ```bash
 brew install mysql
-mysql.server
+mysql.server start
 mysql -u root
 ```
 
