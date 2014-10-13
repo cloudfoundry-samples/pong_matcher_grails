@@ -17,4 +17,6 @@ databaseChangeLog = {
 	}
 
 	include file: 'add-match.groovy'
+
+	include file: 'add-result.groovy'
 }
