@@ -15,4 +15,6 @@ databaseChangeLog = {
 			}
 		}
 	}
+
+	include file: 'add-match.groovy'
 }
