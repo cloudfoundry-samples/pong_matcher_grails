@@ -100,13 +100,13 @@ Then request a match, providing both a request ID and player ID. Again, you
 should get a 200.
 
 ```bash
-curl -v -X PUT $HOST/match_requests/firstrequest -d '{"player": "andrew"}'
+curl -v -H "Content-Type: application/json" -X PUT $HOST/match_requests/firstrequest -d '{"player": "andrew"}'
 ```
 
 Now pretend to be someone else requesting a match:
 
 ```bash
-curl -v -X PUT $HOST/match_requests/secondrequest -d '{"player": "navratilova"}'
+curl -v -H "Content-Type: application/json" -X PUT $HOST/match_requests/secondrequest -d '{"player": "navratilova"}'
 ```
 
 Let's check on the status of our first match request:
@@ -121,7 +121,7 @@ next step.
 Now pretend that you've got back to your desk and need to enter the result:
 
 ```bash
-curl -v -X POST $HOST/results -d '
+curl -v -H "Content-Type: application/json" -X POST $HOST/results -d '
 {
     "match_id":"thematchidyoureceived",
     "winner":"andrew",
