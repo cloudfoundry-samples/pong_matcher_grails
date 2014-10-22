@@ -13,6 +13,10 @@ class UrlMappings {
             action = [POST: "save"]
         }
 
+        "/matches/$id"(controller: "match") {
+            action = [GET: "show"]
+        }
+
         "/"(view: "/index")
         "500"(view: '/error')
 	}

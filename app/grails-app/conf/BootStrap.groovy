@@ -1,4 +1,5 @@
 import grails.converters.JSON
+import org.pongmatcher.Match
 import org.pongmatcher.MatchRequest
 
 class BootStrap {
@@ -12,7 +13,16 @@ class BootStrap {
             ]
         }
 
+        JSON.registerObjectMarshaller(Match) {
+            return [
+                id: it.id,
+                match_request_1_id: it.matchRequest1Id,
+                match_request_2_id: it.matchRequest2Id
+            ]
+        }
+
     }
+
     def destroy = {
     }
 }
