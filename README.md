@@ -29,7 +29,7 @@ Build the app.
 
 ```bash
 cd app
-grails war
+./grailsw war
 ```
 
 Push the app. Its manifest assumes you called your ClearDB instance 'mysql'.
@@ -76,7 +76,7 @@ Source the development exports that correspond with the mysql credentials you ju
 Start the application server:
 
 ```bash
-grails -Dserver.port=3000 run-app
+./grailsw -Dserver.port=3000 run-app
 ```
 
 Export the test host
