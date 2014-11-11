@@ -9,6 +9,7 @@ class BootStrap {
         JSON.registerObjectMarshaller(MatchRequest) {
             return [
                 id: it.id,
+                player: it.requesterId,
                 match_id: it.match()?.id
             ]
         }
