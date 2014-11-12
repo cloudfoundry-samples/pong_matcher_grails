@@ -1,4 +1,4 @@
-# code_snippet gsg-grails-s5 start
+// code_snippet gsg-grails-s5 start
 
 dataSource {
     pooled = true
@@ -16,7 +16,7 @@ dataSource {
         }
     }
 }
-# code_snippet gsg-grails-s5 end
+// code_snippet gsg-grails-s5 end
 
 
 hibernate {

@@ -46,7 +46,7 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
 
-# code_snippet gsg-grails-s3 start
+// code_snippet gsg-grails-s3 start
 
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
@@ -55,8 +55,7 @@ grails.project.dependency.resolution = {
         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
         runtime 'mysql:mysql-connector-java:5.1.33'
     }
-
-# code_snippet gsg-grails-s3 end
+// code_snippet gsg-grails-s3 end
 
     plugins {
         // plugins for the build system only
