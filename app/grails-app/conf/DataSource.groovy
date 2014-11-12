@@ -1,3 +1,5 @@
+// code_snippet gsg-grails-s5 start
+
 dataSource {
     pooled = true
     jmxExport = true
@@ -14,6 +16,9 @@ dataSource {
         }
     }
 }
+// code_snippet gsg-grails-s5 end
+
+
 hibernate {
     cache.use_second_level_cache = true
     cache.use_query_cache = false
