@@ -28,7 +28,6 @@ cf create-service cleardb spark mysql
 Build the app.
 
 ```bash
-cd app
 ./grailsw war
 ```
 
