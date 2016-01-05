@@ -5,7 +5,7 @@ API only, so you have to use `curl` to interact with it.
 
 It has an [acceptance test suite][acceptance-test] you might like to look at.
 
-**Note**: When We highly recommend that you use the latest versions of any software required by this sample application. 
+**Note**: We highly recommend that you use the latest versions of any software required by this sample application. 
 
 ## Running on [Pivotal Web Services][pws]
 
