@@ -1,3 +1,0 @@
-#!/bin/bash
-
-export DATABASE_URL=mysql://grailspong:grailspong@localhost/pong_matcher_grails_development

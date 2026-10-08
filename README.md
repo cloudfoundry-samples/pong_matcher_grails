@@ -3,16 +3,17 @@
 This is an app to match ping-pong players with each other. It's currently an
 API only, so you have to use `curl` to interact with it.
 
-It has an [acceptance test suite][acceptance-test] you might like to look at.
+It is an [Apache Grails][grails] 8 application (Spring Boot 4) and requires
+JDK 21 or later. It has an [acceptance test suite][acceptance-test] you might
+like to look at.
 
-**Note**: We highly recommend that you use the latest versions of any software required by this sample application. 
+## Running on Cloud Foundry
 
-## Running on [Pivotal Web Services][pws]
-
-Log in.
+Log in, replacing `API-ENDPOINT` with the API endpoint of your Cloud Foundry
+installation.
 
 ```bash
-cf login -a https://api.run.pivotal.io
+cf login -a API-ENDPOINT
 ```
 
 Target your org / space. An empty space is recommended, to avoid naming collisions.
@@ -21,72 +22,73 @@ Target your org / space. An empty space is recommended, to avoid naming collisio
 cf target -o myorg -s myspace
 ```
 
-Sign up for a cleardb instance.
+Build the app. This creates `build/libs/pong_matcher_grails-0.1.war`.
 
 ```bash
-cf create-service cleardb spark mysql
+./gradlew assemble
 ```
 
-Build the app.
+Push the app. The `manifest.yml` file describes the app. It sets two
+environment variables for the Java buildpack:
+
+- `BP_JAVA_VERSION: 21`, because Grails 8 requires Java 21 and the buildpack
+  uses Java 17 by default.
+- `JBP_CONFIG_TOMCAT: '{ tomcat: { version: 11.+ } }'`, because Grails 8 is
+  based on Spring Boot 4, which requires Servlet 6.1 (Tomcat 11). The buildpack
+  uses Tomcat 10.1 by default.
 
 ```bash
-./grailsw war
+cf push
 ```
 
-Push the app. Its manifest assumes you called your ClearDB instance 'mysql'.
+By default the app uses an in-memory H2 database, so no database service is
+needed. To store data in MySQL or PostgreSQL, create a service instance from
+one of the database services listed by `cf marketplace`, bind it to the app,
+and restage:
 
 ```bash
-cf push -n mysubdomain
+cf marketplace
+cf create-service SERVICE PLAN SERVICE-INSTANCE
+cf bind-service grailspong SERVICE-INSTANCE
+cf restage grailspong
 ```
 
-Export the test host
+For Spring Boot 3 and 4 based apps, including Grails 8, the Java buildpack
+automatically adds [java-cfenv][java-cfenv] to the app. When a database
+service is bound, java-cfenv sets the Spring Boot `spring.datasource.*`
+properties from the service credentials.
+`grails-app/conf/application.yml` maps those properties to the GORM
+`dataSource` configuration, and the tables are created at startup.
+
+Export the test host, using the route shown by `cf app grailspong`:
 
 ```bash
-export HOST=http://mysubdomain.cfapps.io
+export HOST=https://grailspong.example.com
 ```
 
 Now follow the [interaction instructions](#interaction-instructions).
 
 ## Running locally
 
-The following assumes you have a working, recent version of Groovy.
-
-Install and start mysql:
+Start the application server, which uses an in-memory H2 database:
 
 ```bash
-brew install mysql
-mysql.server start
-mysql -u root
-```
-
-Create a database user and table in the MySQL REPL you just opened:
-
-```sql
-CREATE USER 'grailspong'@'localhost' IDENTIFIED BY 'grailspong';
-CREATE DATABASE pong_matcher_grails_development;
-GRANT ALL ON pong_matcher_grails_development.* TO 'grailspong'@'localhost';
-exit
-```
-
-Source the development exports that correspond with the mysql credentials you just entered:
-
-```bash
-. scripts/development_exports
-```
-
-Start the application server:
-
-```bash
-./grailsw -Dserver.port=3000 run-app
+./gradlew bootRun
 ```
 
 Export the test host
 
 ```bash
-export HOST=http://localhost:3000
+export HOST=http://localhost:8080
 ```
 
 Now follow the [interaction instructions](#interaction-instructions).
+
+To run the tests:
+
+```bash
+./gradlew check
+```
 
 ## Interaction instructions
 
@@ -137,4 +139,5 @@ who has already played. The program is not yet useful enough to
 allow pairs who've already played to play again.
 
 [acceptance-test]:https://github.com/cloudfoundry-samples/pong_matcher_acceptance
-[pws]:https://run.pivotal.io
+[grails]:https://grails.apache.org
+[java-cfenv]:https://github.com/pivotal-cf/java-cfenv

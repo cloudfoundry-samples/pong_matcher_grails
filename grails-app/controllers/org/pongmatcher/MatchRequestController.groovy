@@ -1,40 +1,35 @@
 package org.pongmatcher
 
-import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
+import grails.converters.JSON
+import grails.gorm.transactions.Transactional
 
-import org.pongmatcher.Result
+import static org.springframework.http.HttpStatus.NOT_FOUND
+import static org.springframework.http.HttpStatus.OK
 
-@Transactional(readOnly = true)
 class MatchRequestController {
 
-    static responseFormats = ['json']
-
-    def show(MatchRequest matchRequestInstance) {
-        if (matchRequestInstance == null) {
+    @Transactional(readOnly = true)
+    def show(String id) {
+        MatchRequest matchRequest = MatchRequest.get(id)
+        if (matchRequest == null) {
             render status: NOT_FOUND
             return
-        } else {
-            respond matchRequestInstance, [status: OK]
-            return
         }
+        render(matchRequest.toJson() as JSON)
     }
 
     @Transactional
-    def save() {
-        def newMatchRequest = new MatchRequest(requesterId: request.JSON.get("player"))
-        newMatchRequest.id = params.id
-        newMatchRequest.save(failOnError: true)
+    def save(String id) {
+        def newMatchRequest = new MatchRequest(requesterId: request.JSON.player)
+        newMatchRequest.id = id
+        newMatchRequest.save(failOnError: true, flush: true)
 
         def openMatchRequest = MatchRequest.firstOpen(newMatchRequest.requesterId)
         if (openMatchRequest) {
-            def match = new Match(matchRequest1: openMatchRequest,
-                                  matchRequest2: newMatchRequest)
-            match.save(failOnError: true)
+            new Match(matchRequest1: openMatchRequest, matchRequest2: newMatchRequest)
+                .save(failOnError: true)
         }
 
         render status: OK
-        return
     }
-
 }

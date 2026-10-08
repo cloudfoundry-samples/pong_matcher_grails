@@ -1,0 +1,38 @@
+info:
+  app:
+    name: '@info.app.name@'
+    version: '@info.app.version@'
+    grailsVersion: '@info.app.grailsVersion@'
+grails:
+  codegen:
+    defaultPackage: org.pongmatcher
+  profile: rest-api
+  mime:
+    types:
+      json:
+      - application/json
+      - text/json
+      all: '*/*'
+# GORM reads dataSource.*, so map the Spring Boot spring.datasource.* properties onto it.
+# On Cloud Foundry, java-cfenv (added by the Java buildpack) sets spring.datasource.*
+# from a bound MySQL or PostgreSQL service. Without a bound service, in-memory H2 is used.
+dataSource:
+  pooled: true
+  jmxExport: true
+  dbCreate: update
+  url: ${spring.datasource.url:jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE}
+  driverClassName: ${spring.datasource.driver-class-name:org.h2.Driver}
+  username: ${spring.datasource.username:sa}
+  password: ${spring.datasource.password:}
+environments:
+  test:
+    dataSource:
+      url: jdbc:h2:mem:testDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+      driverClassName: org.h2.Driver
+      username: sa
+      password: ''
+hibernate:
+  cache:
+    queries: false
+    use_second_level_cache: false
+    use_query_cache: false

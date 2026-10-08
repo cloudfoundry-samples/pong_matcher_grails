@@ -1,22 +1,19 @@
 package org.pongmatcher
 
-import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
+import grails.gorm.transactions.Transactional
+
+import static org.springframework.http.HttpStatus.NOT_FOUND
 
 class MatchController {
 
-    static responseFormats = ['json']
-
-    def show(Match matchInstance) {
-        if (matchInstance == null) {
-            System.out.println("NOT FOUND")
+    @Transactional(readOnly = true)
+    def show(Long id) {
+        Match match = id != null ? Match.get(id) : null
+        if (match == null) {
             render status: NOT_FOUND
             return
-        } else {
-            System.out.println("FOUND!")
-            System.out.println(matchInstance as JSON)
-            respond matchInstance, [status: OK]
-            return
         }
+        render(match.toJson() as JSON)
     }
 }

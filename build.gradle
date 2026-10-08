@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+           url = 'https://repo.grails.org/grails/restricted'
+        }
+    }
+    dependencies { // Not Published to Gradle Plugin Portal
+        classpath platform("org.apache.grails:grails-bom:$grailsVersion")
+        classpath "org.apache.grails:grails-data-hibernate5"
+        classpath "org.apache.grails:grails-gradle-plugins"
+    }
+}
+
+plugins {
+    id "war"
+    id "idea"
+    id "eclipse"
+}
+
+// Not Published to Gradle Plugin Portal
+apply plugin: "org.apache.grails.gradle.grails-web"
+
+group = "org.pongmatcher"
+
+repositories {
+    mavenCentral()
+    maven {
+       url = 'https://repo.grails.org/grails/restricted'
+    }
+}
+
+dependencies {
+    profile "org.apache.grails.profiles:rest-api"
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    implementation platform("org.apache.grails:grails-bom:$grailsVersion")
+    implementation "org.apache.grails:grails-converters"
+    implementation "org.apache.grails:grails-core"
+    implementation "org.apache.grails:grails-data-hibernate5"
+    implementation "org.apache.grails:grails-databinding"
+    implementation "org.apache.grails:grails-interceptors"
+    implementation "org.apache.grails:grails-logging"
+    implementation "org.apache.grails:grails-services"
+    implementation "org.apache.grails:grails-url-mappings"
+    implementation "org.apache.grails:grails-web-boot"
+    implementation "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    console "org.apache.grails:grails-console"
+    // JDBC drivers: H2 is the default (in-memory); MySQL and PostgreSQL are used
+    // when a database service is bound on Cloud Foundry.
+    runtimeOnly "com.h2database:h2"
+    runtimeOnly "com.mysql:mysql-connector-j"
+    runtimeOnly "org.postgresql:postgresql"
+    runtimeOnly "com.zaxxer:HikariCP"
+    testImplementation "org.apache.grails:grails-testing-support-datamapping"
+    testImplementation "org.apache.grails:grails-testing-support-web"
+    testImplementation "org.spockframework:spock-core"
+}
+
+// Grails 8 requires Java 21. Pin the bytecode level so building with a newer
+// JDK still produces classes that run on the Java 21 runtime used on Cloud Foundry.
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+// Only build the executable Spring Boot war (no additional -plain.war)
+tasks.named("war") {
+    enabled = false
+}

@@ -1,19 +1,18 @@
 package org.pongmatcher
 
-import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
-@Transactional(readOnly = true)
+import static org.springframework.http.HttpStatus.OK
+
 class EveryResourceController {
 
     static allowedMethods = [delete: "DELETE"]
 
     @Transactional
     def delete() {
+        Result.executeUpdate("delete Result r")
         Match.executeUpdate("delete Match m")
         MatchRequest.executeUpdate("delete MatchRequest r")
-        Result.executeUpdate("delete Result r")
         render status: OK
-        return
     }
 }
